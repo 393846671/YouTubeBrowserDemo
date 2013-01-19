@@ -154,7 +154,6 @@ static NSMutableDictionary* keyMappers = nil;
     
     //get the key mapper
     JSONKeyMapper* keyMapper = keyMappers[_className];
-    JMLog(@"keyMapper for [%@] = %@", _className, keyMapper);
     
     //transform the key names, if neccessary
     if (keyMapper) {

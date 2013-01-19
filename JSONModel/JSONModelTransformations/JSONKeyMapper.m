@@ -16,9 +16,6 @@
 
 #import "JSONKeyMapper.h"
 
-//static NSMutableDictionary* _toModelMap = nil;
-//static NSMutableDictionary* _toJSONMap  = nil;
-
 @implementation JSONKeyMapper
 {
     NSMutableDictionary* _toModelMap;
