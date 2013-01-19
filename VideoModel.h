@@ -16,6 +16,6 @@
 
 @property (strong, nonatomic) VideoTitle* title;
 @property (strong, nonatomic) NSArray<VideoLink>* link;
-@property (strong, nonatomic) MediaGroup* media$group;
+@property (strong, nonatomic) MediaGroup* group;
 
 @end

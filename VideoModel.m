@@ -10,4 +10,11 @@
 
 @implementation VideoModel
 
++(JSONKeyMapper*)keyMapper
+{
+    return [[JSONKeyMapper alloc] initWithDictionary:
+            @{@"media$group":@"group"}
+            ];
+}
+
 @end

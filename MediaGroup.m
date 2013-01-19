@@ -10,4 +10,11 @@
 
 @implementation MediaGroup
 
++(JSONKeyMapper*)keyMapper
+{
+    return [[JSONKeyMapper alloc] initWithDictionary:
+            @{@"media$thumbnail":@"thumbnail"}
+            ];
+}
+
 @end

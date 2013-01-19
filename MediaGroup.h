@@ -11,6 +11,6 @@
 
 @interface MediaGroup : JSONModel
 
-@property (strong, nonatomic) NSArray<MediaThumbnail>* media$thumbnail;
+@property (strong, nonatomic) NSArray<MediaThumbnail>* thumbnail;
 
 @end
