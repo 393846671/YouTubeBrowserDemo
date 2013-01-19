@@ -9,8 +9,6 @@
 #import "ViewController.h"
 
 #import "MGScrollView.h"
-#import "MGTableBoxStyled.h"
-#import "MGLineStyled.h"
 
 #import "JSONModelLib.h"
 #import "VideoModel.h"

@@ -103,9 +103,9 @@ static NSMutableDictionary* keyMappers = nil;
 
 -(id)initWithString:(NSString*)string error:(JSONModelError**)err
 {
-    JSONModelError* initError;
+    JSONModelError* initError = nil;
     id objModel = [self initWithString:string usingEncoding:NSUTF8StringEncoding error:&initError];
-    if (err) *err = initError;
+    if (initError) *err = initError;
     return objModel;
 }
 
@@ -117,12 +117,12 @@ static NSMutableDictionary* keyMappers = nil;
                                                error:&initError];
 
     if (initError) {
-        if (err) *err = [JSONModelError errorBadJSON];
+        *err = [JSONModelError errorBadJSON];
         return nil;
     }
     
     id objModel = [self initWithDictionary:obj error:&initError];
-    if (err) *err = initError;
+    if (initError) *err = initError;
     return objModel;
 }
 
@@ -154,6 +154,7 @@ static NSMutableDictionary* keyMappers = nil;
     
     //get the key mapper
     JSONKeyMapper* keyMapper = keyMappers[_className];
+    JMLog(@"keyMapper for [%@] = %@", _className, keyMapper);
     
     //transform the key names, if neccessary
     if (keyMapper) {
@@ -176,9 +177,8 @@ static NSMutableDictionary* keyMappers = nil;
 
         //not all required properties are in - invalid input
         JMLog(@"Incoming data was invalid [%@ initWithDictionary:]. Keys missing: %@", self.className, requiredProperties);
-        if (err) {
-            *err = [JSONModelError errorInvalidDataWithMissingKeys:requiredProperties];
-        }
+        
+        *err = [JSONModelError errorInvalidDataWithMissingKeys:requiredProperties];
         return nil;
     }
     
@@ -207,9 +207,8 @@ static NSMutableDictionary* keyMappers = nil;
         if (isValueOfAllowedType==NO) {
             //type not allowed
             JMLog(@"Type %@ is not allowed in JSON.", NSStringFromClass(jsonValueClass));
-            if (err) {
-                *err = [JSONModelError errorInvalidData];
-            }
+
+            *err = [JSONModelError errorInvalidData];
             return nil;
         }
         
@@ -242,11 +241,11 @@ static NSMutableDictionary* keyMappers = nil;
             if ([[property.type class] isSubclassOfClass:[JSONModel class]]) {
                 
                 //initialize the property's model, store it
-                NSError* initError;
+                NSError* initError = nil;
                 id value = [[property.type alloc] initWithDictionary: jsonValue error:&initError];
 
                 if (!value) {
-                    if (err) *err = [JSONModelError errorInvalidData];
+                    if (initError) *err = [JSONModelError errorInvalidData];
                     return nil;
                 }
                 [self setValue:value forKey:key];
@@ -263,7 +262,7 @@ static NSMutableDictionary* keyMappers = nil;
                     //JMLog(@"proto: %@", p.protocol);
                     jsonValue = [self __transform:jsonValue forProperty:property];
                     if (!jsonValue) {
-                        if (err) *err = [JSONModelError errorInvalidData];
+                        *err = [JSONModelError errorInvalidData];
                         return nil;
                     }
                 }
@@ -330,7 +329,8 @@ static NSMutableDictionary* keyMappers = nil;
     }
     
     //run any custom model validation
-    NSError* validationError = [self validate];
+    NSError* validationError = nil;
+    [self validate:&validationError];
     if (validationError) {
         *err = validationError;
         return nil;
@@ -357,6 +357,8 @@ static NSMutableDictionary* keyMappers = nil;
 -(NSArray*)__properties__
 {
     if (classProperties[self.className]) return [classProperties[self.className] allValues];
+
+    if (!self.className) [self __setup__];
     [self __restrospectProperties];
     return [classProperties[self.className] allValues];
 }
@@ -424,7 +426,7 @@ static NSMutableDictionary* keyMappers = nil;
                     if ([protocolName isEqualToString:@"Optional"]) {
                         p.isOptional = YES;
                     } else if([protocolName isEqualToString:@"Index"]) {
-                        classIndexes[_className] = p.name;
+                        classIndexes[self.className] = p.name;
                     } else if([protocolName isEqualToString:@"ConvertOnDemand"]) {
                         p.convertsOnDemand = YES;
                     } else {
@@ -504,7 +506,7 @@ static NSMutableDictionary* keyMappers = nil;
         //check if it's a dictionary of models
         if ([property.type isSubclassOfClass:[NSDictionary class]]) {
             NSMutableDictionary* res = [NSMutableDictionary dictionary];
-            JSONModelError* initErr;
+            JSONModelError* initErr = nil;
             
             for (NSString* key in [value allKeys]) {
                 id obj = [[[protocolClass class] alloc] initWithDictionary:value[key] error:&initErr];
@@ -735,9 +737,9 @@ static NSMutableDictionary* keyMappers = nil;
 }
 
 #pragma mark - custom data validation
--(NSError*)validate
+-(void)validate:(NSError**)error
 {
-    return nil;
+    
 }
 
 #pragma mark - custom recursive description
