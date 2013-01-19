@@ -10,4 +10,11 @@
 
 @implementation VideoTitle
 
++(JSONKeyMapper*)keyMapper
+{
+    return [[JSONKeyMapper alloc] initWithDictionary:
+            @{@"$t": @"text"}
+            ];
+}
+
 @end

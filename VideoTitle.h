@@ -10,6 +10,6 @@
 
 @interface VideoTitle : JSONModel
 
-@property (strong, nonatomic) NSString* $t;
+@property (strong, nonatomic) NSString* text;
 
 @end
