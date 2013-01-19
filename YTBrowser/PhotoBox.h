@@ -6,9 +6,7 @@
 
 @interface PhotoBox : MGBox
 
-+ (PhotoBox *)photoAddBoxWithSize:(CGSize)size;
 + (PhotoBox *)photoBoxForURL:(NSURL*)url size:(CGSize)size title:(NSString*)title;
-
 - (void)loadPhotoFromURL:(NSURL*)url;
 
 @end

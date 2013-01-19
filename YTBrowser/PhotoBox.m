@@ -31,30 +31,6 @@
 
 #pragma mark - Factories
 
-+ (PhotoBox *)photoAddBoxWithSize:(CGSize)size {
-
-  // basic box
-  PhotoBox *box = [PhotoBox boxWithSize:size];
-
-  // style and tag
-  box.backgroundColor = [UIColor colorWithRed:0.74 green:0.74 blue:0.75 alpha:1];
-  box.tag = -1;
-
-  // add the add image
-  UIImage *add = [UIImage imageNamed:@"add"];
-  UIImageView *addView = [[UIImageView alloc] initWithImage:add];
-  [box addSubview:addView];
-  addView.contentMode = UIViewContentModeScaleAspectFill;
-  addView.center = (CGPoint){box.width / 2, box.height / 2};
-  addView.alpha = 0.2;
-  addView.autoresizingMask = UIViewAutoresizingFlexibleTopMargin
-      | UIViewAutoresizingFlexibleRightMargin
-      | UIViewAutoresizingFlexibleBottomMargin
-      | UIViewAutoresizingFlexibleLeftMargin;
-
-  return box;
-}
-
 + (PhotoBox *)photoBoxForURL:(NSURL*)url size:(CGSize)size title:(NSString*)title
 {
   // box with photo number tag
@@ -70,10 +46,10 @@
       | UIViewAutoresizingFlexibleBottomMargin
       | UIViewAutoresizingFlexibleLeftMargin;
   spinner.color = UIColor.lightGrayColor;
+
   [box addSubview:spinner];
   [spinner startAnimating];
-
-    
+  
   // do the photo loading async, because internets
   __weak id wbox = box;
   box.asyncLayoutOnce = ^{
@@ -81,15 +57,6 @@
   };
 
   return box;
-}
-
-#pragma mark - Layout
-
-- (void)layout {
-  [super layout];
-
-  // speed up shadows
-  self.layer.shadowPath = [UIBezierPath bezierPathWithRect:self.bounds].CGPath;
 }
 
 #pragma mark - Photo box loading
