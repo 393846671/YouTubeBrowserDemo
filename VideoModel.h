@@ -9,13 +9,12 @@
 #import "JSONModel.h"
 
 #import "VideoLink.h"
-#import "VideoTitle.h"
-#import "MediaGroup.h"
+#import "MediaThumbnail.h"
 
 @interface VideoModel : JSONModel
 
-@property (strong, nonatomic) VideoTitle* title;
+@property (strong, nonatomic) NSString* title;
 @property (strong, nonatomic) NSArray<VideoLink>* link;
-@property (strong, nonatomic) MediaGroup* group;
+@property (strong, nonatomic) NSArray<MediaThumbnail>* thumbnail;
 
 @end

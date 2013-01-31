@@ -12,9 +12,10 @@
 
 +(JSONKeyMapper*)keyMapper
 {
-    return [[JSONKeyMapper alloc] initWithDictionary:
-            @{@"media$group":@"group"}
-            ];
+    return [[JSONKeyMapper alloc] initWithDictionary:@{
+            @"media$group.media$thumbnail":@"thumbnail",
+            @"title.$t": @"title",
+            }];
 }
 
 @end

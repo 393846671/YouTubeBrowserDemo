@@ -117,10 +117,10 @@
         
         //get the data
         VideoModel* video = videos[i];
-        MediaThumbnail* thumb = video.group.thumbnail[0];
+        MediaThumbnail* thumb = video.thumbnail[0];
         
         //create a box
-        PhotoBox *box = [PhotoBox photoBoxForURL:thumb.url size:CGSizeMake(150,100) title:video.title.text];
+        PhotoBox *box = [PhotoBox photoBoxForURL:thumb.url size:CGSizeMake(150,100) title:video.title];
         box.tag = 1000;
         box.onTap = ^{
 
