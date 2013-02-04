@@ -8,6 +8,7 @@
 
 #import "ViewController.h"
 
+#import "MGBox.h"
 #import "MGScrollView.h"
 
 #import "JSONModelLib.h"
@@ -15,8 +16,6 @@
 
 #import "PhotoBox.h"
 #import "WebVideoViewController.h"
-
-#define k1ColWidth 312
 
 @interface ViewController () <UITextFieldDelegate>
 {
@@ -45,7 +44,7 @@
     searchBox.backgroundColor = [UIColor colorWithWhite:0.5 alpha:1];
     
     //setup the search text field
-    UITextField* fldSearch = [[UITextField alloc] initWithFrame:CGRectMake(4,4,k1ColWidth,35)];
+    UITextField* fldSearch = [[UITextField alloc] initWithFrame:CGRectMake(4,4,312,35)];
     fldSearch.borderStyle = UITextBorderStyleRoundedRect;
     fldSearch.backgroundColor = [UIColor whiteColor];
     fldSearch.font = [UIFont systemFontOfSize:24];
@@ -60,7 +59,7 @@
     [scroller.boxes addObject: searchBox];
     
     //fire up the first search
-    [self searchYoutubeVideosForTerm:@"pomplamoose"];
+    [self searchYoutubeVideosForTerm: fldSearch.text];
 }
 
 //fire up API search on Enter pressed
@@ -79,11 +78,13 @@
     term = [term stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
     //make HTTP call
-    [JSONHTTPClient getJSONFromURLWithString:[NSString stringWithFormat:@"http://gdata.youtube.com/feeds/api/videos?q=%@&max-results=50&alt=json", term]
+    NSString* searchCall = [NSString stringWithFormat:@"http://gdata.youtube.com/feeds/api/videos?q=%@&max-results=50&alt=json", term];
+
+    [JSONHTTPClient getJSONFromURLWithString: searchCall
                                   completion:^(NSDictionary *json, JSONModelError *err) {
                                       
                                       //got JSON back
-                                      NSLog(@"Got JSON from web.");
+                                      NSLog(@"Got JSON from web: %@", json);
                                       
                                       if (err) {
                                           [[[UIAlertView alloc] initWithTitle:@"Error"
@@ -120,17 +121,9 @@
         MediaThumbnail* thumb = video.thumbnail[0];
         
         //create a box
-        PhotoBox *box = [PhotoBox photoBoxForURL:thumb.url size:CGSizeMake(150,100) title:video.title];
-        box.tag = 1000;
+        PhotoBox *box = [PhotoBox photoBoxForURL:thumb.url title:video.title];
         box.onTap = ^{
-
-            NSURL* videoUrl =[video.link[0] href];
-            NSLog(@"Open URL: %@", videoUrl);
-
-            //[[UIApplication sharedApplication] openURL:videoUrl];
-            
             [self performSegueWithIdentifier:@"videoViewSegue" sender:video];
-            
         };
         
         //add the box

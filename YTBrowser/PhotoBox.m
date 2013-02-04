@@ -5,9 +5,6 @@
 #import "PhotoBox.h"
 
 @implementation PhotoBox
-{
-    NSString* titleString;
-}
 
 #pragma mark - Init
 
@@ -31,11 +28,11 @@
 
 #pragma mark - Factories
 
-+ (PhotoBox *)photoBoxForURL:(NSURL*)url size:(CGSize)size title:(NSString*)title
++ (PhotoBox *)photoBoxForURL:(NSURL*)url title:(NSString*)title
 {
   // box with photo number tag
-  PhotoBox *box = [PhotoBox boxWithSize:size];
-  [box setTitle:title];
+  PhotoBox *box = [PhotoBox boxWithSize:CGSizeMake(150,100)];
+  box.titleString = title;
     
   // add a loading spinner
   UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc]
@@ -60,11 +57,6 @@
 }
 
 #pragma mark - Photo box loading
--(void)setTitle:(NSString*)title
-{
-    titleString = title;
-}
-
 - (void)loadPhotoFromURL:(NSURL*)url
 {
 
@@ -81,39 +73,40 @@
 
     // failed to get the photo?
     if (!data) {
-      self.alpha = 0.3;
-      return;
+    self.alpha = 0.3;
+    return;
     }
 
     // got the photo, so lets show it
     UIImage *image = [UIImage imageWithData:data];
     UIImageView *imageView = [[UIImageView alloc] initWithImage:image];
     [self addSubview:imageView];
+
     imageView.size = self.size;
     imageView.alpha = 0;
     imageView.autoresizingMask = UIViewAutoresizingFlexibleWidth
-        | UIViewAutoresizingFlexibleHeight;
+    | UIViewAutoresizingFlexibleHeight;
 
     // fade the image in
     [UIView animateWithDuration:0.2 animations:^{
-      imageView.alpha = 1;
+    imageView.alpha = 1;
     }];
-      
-      
-      UILabel* label = [[UILabel alloc] initWithFrame:CGRectMake(0,0,self.frame.size.width,20)];
-      label.backgroundColor = [UIColor clearColor];
-      label.text = titleString;
-      label.font = [UIFont boldSystemFontOfSize:16.0];
-      label.textColor = [UIColor whiteColor];
-      [self addSubview:label];
- 
-      label.layer.shadowColor = [UIColor colorWithWhite:0.12 alpha:1].CGColor;
-      label.layer.shadowOffset = CGSizeMake(0, 0.5);
-      label.layer.shadowRadius = 1;
-      label.layer.shadowOpacity = 1;
-      label.layer.rasterizationScale = 1.0;
-      label.layer.shouldRasterize = YES;
-      
+
+
+    UILabel* label = [[UILabel alloc] initWithFrame:CGRectMake(0,0,self.frame.size.width,20)];
+    label.backgroundColor = [UIColor clearColor];
+    label.text = self.titleString;
+    label.font = [UIFont boldSystemFontOfSize:16.0];
+    label.textColor = [UIColor whiteColor];
+    [self addSubview:label];
+
+    label.layer.shadowColor = [UIColor colorWithWhite:0.12 alpha:1].CGColor;
+    label.layer.shadowOffset = CGSizeMake(0, 0.5);
+    label.layer.shadowRadius = 1;
+    label.layer.shadowOpacity = 1;
+    label.layer.rasterizationScale = 1.0;
+    label.layer.shouldRasterize = YES;
+
   });
 }
 

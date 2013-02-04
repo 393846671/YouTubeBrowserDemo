@@ -6,7 +6,8 @@
 
 @interface PhotoBox : MGBox
 
-+ (PhotoBox *)photoBoxForURL:(NSURL*)url size:(CGSize)size title:(NSString*)title;
-- (void)loadPhotoFromURL:(NSURL*)url;
++(PhotoBox *)photoBoxForURL:(NSURL*)url title:(NSString*)title;
+
+@property (strong, nonatomic) NSString* titleString;
 
 @end
